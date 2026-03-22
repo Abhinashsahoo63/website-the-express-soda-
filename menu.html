@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menu – The Express Soda</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    /* ── MENU PAGE SPECIFIC ─────────────────────────────── */
+    .menu-main { padding: 5rem 2rem 6rem; }
+    .menu-wrap  { max-width: 1200px; margin: 0 auto; }
+
+    /* Tabs */
+    .menu-tabs { display: flex; flex-wrap: wrap; gap: .65rem; justify-content: center; margin-bottom: 3.5rem; }
+    .tab-btn {
+      font-family: var(--ff-h); font-size: .8rem; font-weight: 700; letter-spacing: .07em;
+      padding: .58rem 1.4rem; border-radius: 100px;
+      border: 2px solid var(--cream2); background: var(--white); color: var(--mid);
+      transition: var(--tr);
+    }
+    .tab-btn:hover { border-color: var(--red); color: var(--red); }
+    .tab-btn.active { background: var(--red); border-color: var(--red); color: var(--white); box-shadow: 0 4px 14px rgba(214,43,43,.3); }
+
+    /* Grid */
+    .food-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 1.6rem; }
+    .food-card.hidden { display: none; }
+
+    /* Remove + buttons */
+    .add-btn { display: none !important; }
+    .food-card-footer { justify-content: flex-start; }
+    .food-price-split { display: flex; gap: 1rem; }
+
+    /* Category heading labels in grid */
+    .cat-label {
+      grid-column: 1 / -1;
+      display: flex; align-items: center; gap: 1rem;
+      font-family: var(--ff-d); font-size: 1.5rem; color: var(--dark); margin-top: 1rem;
+    }
+    .cat-label::after { content: ''; flex: 1; height: 2px; background: var(--cream2); }
+    .cat-label span { font-size: .7rem; font-family: var(--ff-h); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; background: var(--red); color: var(--white); padding: .2rem .7rem; border-radius: 100px; }
+
+    @media(max-width:480px){ .food-grid{grid-template-columns:1fr;} }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar solid" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.jpeg" alt="Logo" class="logo-img"/>
+      <span class="logo-text">The Express Soda</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html"   class="nav-link">Home</a></li>
+      <li><a href="menu.html"    class="nav-link active">Menu</a></li>
+      <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1600&q=80')"></div>
+  <div class="page-hero-overlay"></div>
+  <div class="page-hero-content">
+    <span class="page-hero-tag">What we serve</span>
+    <h1 class="page-hero-title">Our Menu</h1>
+  </div>
+</div>
+
+<!-- MENU MAIN -->
+<section class="menu-main">
+  <div class="menu-wrap">
+    <div class="section-header">
+      <span class="section-tag">Fresh every day</span>
+      <h2 class="section-title">Pick Your Plate</h2>
+      <p class="section-sub">Filter by category or browse everything — from gym fuel to loaded street food.</p>
+    </div>
+
+    <!-- TABS -->
+    <div class="menu-tabs" id="menuTabs">
+      <button class="tab-btn active" data-cat="all">🍽️ All Items</button>
+      <button class="tab-btn" data-cat="gym">💪 Gym Food</button>
+      <button class="tab-btn" data-cat="momo">🥟 Momo</button>
+      <button class="tab-btn" data-cat="burger">🍔 Burgers</button>
+      <button class="tab-btn" data-cat="special">⭐ Specials</button>
+    </div>
+
+    <!-- FOOD GRID -->
+    <div class="food-grid" id="menuGrid">
+
+      <!-- ══════════ GYM FOOD ══════════ -->
+
+      <div class="food-card" data-cat="gym">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=600&q=80" alt="Peanut Butter Bread" loading="lazy"/>
+          <span class="food-img-tag tag-gym">Gym</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Brown Bread Peanut Butter</h3>
+          <p>Wholesome brown bread loaded with thick creamy peanut butter.</p>
+          <div class="food-card-footer"><span class="food-price">₹30</span></div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="gym">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&q=80" alt="PB with Dry Fruits" loading="lazy"/>
+          <span class="food-img-tag tag-gym">Gym</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Brown Bread PB + Dry Fruits</h3>
+          <p>Peanut butter on brown bread topped with premium mixed dry fruits.</p>
+          <div class="food-card-footer"><span class="food-price">₹50</span></div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="gym">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1525351484163-7529414344d8?w=600&q=80" alt="Bread Omelette" loading="lazy"/>
+          <span class="food-img-tag tag-gym">Gym</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Bread Omelette</h3>
+          <p>Fluffy egg omelette served with toasted bread slices.</p>
+          <div class="food-card-footer"><span class="food-price">₹30</span></div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="gym">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1506459225024-1428097a7e18?w=600&q=80" alt="Masala Bread Omelette" loading="lazy"/>
+          <span class="food-img-tag tag-gym">Gym</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Masala Bread Omelette</h3>
+          <p>Spiced masala egg omelette with desi tadka and bread.</p>
+          <div class="food-card-footer"><span class="food-price">₹40</span></div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="gym">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=600&q=80" alt="Boiled Egg" loading="lazy"/>
+          <span class="food-img-tag tag-gym">Gym</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Boiled Egg</h3>
+          <p>Perfectly boiled protein-packed eggs — the gym essential.</p>
+          <div class="food-card-footer"><span class="food-price">₹15</span></div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="gym">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1588137378633-dea1336ce1e2?w=600&q=80" alt="Oats" loading="lazy"/>
+          <span class="food-img-tag tag-gym">Gym</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Oats with Dry Fruits</h3>
+          <p>Nutritious oats bowl loaded with premium mixed dry fruits.</p>
+          <div class="food-card-footer"><span class="food-price">₹60</span></div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="gym">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1611073615830-9a57b7db9022?w=600&q=80" alt="Oats with Whey" loading="lazy"/>
+          <span class="food-img-tag tag-gym">Gym</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Oats with Whey &amp; Dry Fruits</h3>
+          <p>Premium oats bowl with whey protein and dry fruits. Max gains.</p>
+          <div class="food-card-footer"><span class="food-price">₹150</span></div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="gym">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=600&q=80" alt="Mass Gainer Shake" loading="lazy"/>
+          <span class="food-img-tag tag-gym">Gym</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Mass Gainer Shake</h3>
+          <p>High-calorie thick shake to support serious muscle bulk.</p>
+          <div class="food-card-footer"><span class="food-price">₹50</span></div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="gym">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=600&q=80" alt="Whey Protein Shake" loading="lazy"/>
+          <span class="food-img-tag tag-gym">Gym</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Whey Protein Shake</h3>
+          <p>Pure whey protein post-workout shake — clean and powerful.</p>
+          <div class="food-card-footer"><span class="food-price">₹100</span></div>
+        </div>
+      </div>
+
+      <!-- ══════════ MOMO ══════════ -->
+
+      <div class="food-card" data-cat="momo">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1625398407796-82650a8c135f?w=600&q=80" alt="Steam Momo" loading="lazy"/>
+          <span class="food-img-tag tag-momo">Momo</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Steam Momo</h3>
+          <p>Classic steamed veg momos, soft and juicy inside with chutney.</p>
+          <div class="food-card-footer">
+            <div class="food-price-split"><span>½ ₹40</span><span>Full ₹80</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="momo">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1534482421-64566f976cfa?w=600&q=80" alt="Fried Momo" loading="lazy"/>
+          <span class="food-img-tag tag-momo">Momo</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Fried Momo</h3>
+          <p>Crispy pan-fried veg momos golden brown outside, soft inside.</p>
+          <div class="food-card-footer">
+            <div class="food-price-split"><span>½ ₹50</span><span>Full ₹100</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="momo">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=600&q=80" alt="Kurkure Momo" loading="lazy"/>
+          <span class="food-img-tag tag-momo">Momo</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Kurkure Momo</h3>
+          <p>Crunchy extra-crispy coated momo — an addictive street snack.</p>
+          <div class="food-card-footer">
+            <div class="food-price-split"><span>½ ₹60</span><span>Full ₹120</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="momo">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=600&q=80" alt="Oats Fried Momo" loading="lazy"/>
+          <span class="food-img-tag tag-momo">Momo</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Oats Fried Momo</h3>
+          <p>Healthy oat-coated fried momos — crunch without the guilt.</p>
+          <div class="food-card-footer">
+            <div class="food-price-split"><span>½ ₹70</span><span>Full ₹140</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ BURGERS ══════════ -->
+
+      <div class="food-card" data-cat="burger">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80" alt="Veg Burger" loading="lazy"/>
+          <span class="food-img-tag tag-burger">Burger</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Veg Burger</h3>
+          <p>Classic crispy veg patty with fresh lettuce, tomato, and sauce.</p>
+          <div class="food-card-footer"><span class="food-price">₹50</span></div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="burger">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=600&q=80" alt="Alu Tikki Burger" loading="lazy"/>
+          <span class="food-img-tag tag-burger">Burger</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Alu Tikki Burger</h3>
+          <p>Spiced golden potato tikki in a soft toasted bun.</p>
+          <div class="food-card-footer"><span class="food-price">₹50</span></div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="burger">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80" alt="Sandwich Pizza" loading="lazy"/>
+          <span class="food-img-tag tag-burger">Burger</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Sandwich Pizza</h3>
+          <p>Best of both worlds — pizza toppings on a toasted sandwich.</p>
+          <div class="food-card-footer"><span class="food-price">₹50</span></div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="burger">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=600&q=80" alt="Special Veg Overloaded" loading="lazy"/>
+          <span class="food-img-tag tag-burger">Burger</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Special Veg Overloaded</h3>
+          <p>The beast — towering layers of veggies, sauces and crunch.</p>
+          <div class="food-card-footer"><span class="food-price">Ask Us</span></div>
+        </div>
+      </div>
+
+      <!-- ══════════ SPECIALS ══════════ -->
+
+      <div class="food-card" data-cat="special">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?w=600&q=80" alt="Special Maggi" loading="lazy"/>
+          <span class="food-img-tag tag-special">⭐ Special</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Special Maggie</h3>
+          <p>Signature Maggi overloaded with paneer, melted cheese &amp; secret spices.</p>
+          <div class="food-card-footer"><span class="food-price">₹169</span></div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="special">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=600&q=80" alt="Jumbo Brown Bread" loading="lazy"/>
+          <span class="food-img-tag tag-special">⭐ Special</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Jumbo Brown Bread</h3>
+          <p>Thick brown bread with premium dry fruits &amp; rich chocolate syrup drizzle.</p>
+          <div class="food-card-footer"><span class="food-price">₹99</span></div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="special">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80" alt="Paneer Maggi" loading="lazy"/>
+          <span class="food-img-tag tag-special">⭐ Special</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Paneer Maggi</h3>
+          <p>Maggi with soft cottage cheese cubes and house spice blend.</p>
+          <div class="food-card-footer"><span class="food-price">₹50</span></div>
+        </div>
+      </div>
+
+      <div class="food-card" data-cat="special">
+        <div class="food-card-img">
+          <img src="https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=600&q=80" alt="Cheese Maggi" loading="lazy"/>
+          <span class="food-img-tag tag-special">⭐ Special</span>
+        </div>
+        <div class="food-card-body">
+          <h3>Cheese Maggi</h3>
+          <p>Gooey melted cheese poured generously over classic Maggi noodles.</p>
+          <div class="food-card-footer"><span class="food-price">₹70</span></div>
+        </div>
+      </div>
+
+    </div><!-- /food-grid -->
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-wrap">
+        <img src="images/logo.jpeg" alt="Logo" class="logo-img"/>
+        <div><p class="footer-name">The Express Soda</p><p class="footer-tagline">Open Air Cafe</p></div>
+      </div>
+      <p class="footer-desc">Fresh food served fast at Ama Bagan. Gym fuel, momos, burgers &amp; more.</p>
+      <a href="tel:7978295088" class="footer-phone">📞 7978295088</a>
+    </div>
+    <div class="footer-col">
+      <h5>Pages</h5>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Hours</h5>
+      <ul>
+        <li><a>Mon–Sat: 8 AM – 9 PM</a></li>
+        <li><a>Sunday: 9 AM – 7 PM</a></li>
+        <li><a>📦 Online Orders Available</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 The Express Soda · Ama Bagan, Odisha</span>
+    <span class="footer-badge">Made with ❤️ in Odisha</span>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

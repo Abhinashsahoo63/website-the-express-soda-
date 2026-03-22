@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Express Soda – Open Air Cafe</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    /* ── HOME-SPECIFIC ───────────────────────────────────── */
+
+    /* HERO */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; background: #0d0d0d;
+    }
+
+    /* ── ANIMATED CANVAS BACKGROUND ── */
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    /* Dark gradient overlay on top of canvas */
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: radial-gradient(ellipse at 60% 40%, rgba(214,43,43,.22) 0%, transparent 55%),
+                  linear-gradient(180deg, rgba(10,10,10,.15) 0%, rgba(10,10,10,.65) 100%);
+    }
+
+    /* Diagonal lines pattern */
+    .hero-pattern {
+      position: absolute; inset: 0; z-index: 1; opacity: .04;
+      background-image: repeating-linear-gradient(-45deg, #fff 0, #fff 1px, transparent 1px, transparent 22px);
+    }
+
+    .hero-content {
+      position: relative; z-index: 2; text-align: center;
+      padding: 2rem; max-width: 800px;
+    }
+    .hero-chip {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-family: var(--ff-h); font-weight: 700; font-size: .72rem;
+      letter-spacing: .16em; text-transform: uppercase;
+      color: var(--gold); background: rgba(245,200,66,.12);
+      border: 1px solid rgba(245,200,66,.3); padding: .32rem 1.1rem;
+      border-radius: 100px; margin-bottom: 1.6rem;
+      animation: fadeUp .8s .1s ease both;
+    }
+    .hero-title {
+      font-family: var(--ff-d); font-size: clamp(4rem,14vw,8rem);
+      line-height: .9; color: #ffffff; margin-bottom: 1.5rem;
+      animation: fadeUp .8s .2s ease both;
+      text-shadow:
+        0 2px 4px rgba(0,0,0,.9),
+        0 4px 24px rgba(0,0,0,.8),
+        0 8px 48px rgba(0,0,0,.6);
+      -webkit-text-stroke: 0px transparent;
+    }
+    .hero-title em {
+      color: #e82b2b;
+      font-style: normal;
+      text-shadow:
+        0 0 30px rgba(214,43,43,.9),
+        0 0 60px rgba(214,43,43,.5),
+        0 2px 4px rgba(0,0,0,.95),
+        0 4px 24px rgba(0,0,0,.8);
+    }
+    .hero-sub {
+      font-size: 1.05rem; color: rgba(255,255,255,.65); max-width: 480px;
+      margin: 0 auto 2.8rem; line-height: 1.8;
+      animation: fadeUp .8s .3s ease both;
+    }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; animation: fadeUp .8s .4s ease both; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(36px)} to{opacity:1;transform:translateY(0)} }
+
+    /* Stats strip */
+    .stats-strip {
+      background: var(--red); display: flex; align-items: center;
+      justify-content: center; flex-wrap: wrap; padding: 1.3rem 2rem; gap: 0;
+    }
+    .stat { display: flex; flex-direction: column; align-items: center; padding: 0 2.5rem; }
+    .stat-n { font-family: var(--ff-d); font-size: 1.8rem; color: var(--white); line-height: 1.1; }
+    .stat-l { font-family: var(--ff-h); font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.75); margin-top: .15rem; }
+    .stat-div { width: 1px; height: 38px; background: rgba(255,255,255,.25); }
+
+    /* About strip */
+    .about-strip { background: var(--cream2); padding: 5rem 2rem; }
+    .about-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .about-img-wrap { border-radius: var(--rl); overflow: hidden; aspect-ratio: 4/3; position: relative; }
+    .about-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .about-img-wrap::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(214,43,43,.15) 0%, transparent 60%); }
+    .about-accent { display: inline-block; font-family: var(--ff-d); font-size: 5rem; color: rgba(214,43,43,.08); line-height: 1; margin-bottom: -1.5rem; }
+    .about-text h2 { font-family: var(--ff-d); font-size: clamp(1.8rem,4vw,2.8rem); line-height: 1.15; margin-bottom: 1rem; }
+    .about-text h2 span { color: var(--red); }
+    .about-text p { font-size: .95rem; color: var(--muted); line-height: 1.8; margin-bottom: 1.5rem; }
+
+    /* Featured menu preview */
+    .featured-sec { padding: 6rem 2rem; background: var(--cream); }
+    .food-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 1.6rem; max-width: 1200px; margin: 0 auto; }
+    .view-all-wrap { text-align: center; margin-top: 3rem; }
+
+    /* ── Remove + button entirely ── */
+    .add-btn { display: none !important; }
+
+    /* Make footer stretch across when + is gone */
+    .food-card-footer { justify-content: flex-start; }
+    .food-price-split { display: flex; gap: 1rem; }
+
+    /* Specials CTA banner */
+    .cta-banner {
+      position: relative; padding: 5.5rem 2rem; overflow: hidden;
+      background: var(--dark); text-align: center;
+    }
+    .cta-bg { position: absolute; inset: 0; background-image: url('https://images.unsplash.com/photo-1529543544282-ea669407fca3?w=1400&q=80'); background-size: cover; background-position: center; filter: brightness(.25) saturate(1.4); }
+    .cta-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(214,43,43,.5) 0%, rgba(28,28,28,.6) 100%); }
+    .cta-content { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
+    .cta-content h2 { font-family: var(--ff-d); font-size: clamp(2rem,6vw,3.5rem); color: var(--white); margin-bottom: 1rem; }
+    .cta-content p { font-size: 1rem; color: rgba(255,255,255,.65); margin-bottom: 2rem; line-height: 1.7; }
+
+    /* Scroll arrow */
+    .scroll-arrow { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.35); z-index: 3; animation: arrowBounce 2s ease infinite; }
+    .scroll-arrow svg { width: 28px; height: 28px; }
+    @keyframes arrowBounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(9px)} }
+
+    @media (max-width: 768px) {
+      .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .stat { padding: .4rem 1.2rem; }
+      .stat-div { height: 28px; }
+    }
+    @media (max-width: 480px) {
+      .stats-strip { flex-direction: column; gap: 1rem; }
+      .stat-div { width: 60px; height: 1px; }
+      .hero-btns { flex-direction: column; align-items: center; }
+      .btn { max-width: 260px; width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.jpeg" alt="Logo" class="logo-img"/>
+      <span class="logo-text">The Express Soda</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html"   class="nav-link">Home</a></li>
+      <li><a href="menu.html"    class="nav-link">Menu</a></li>
+      <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+      <li><a href="contact.html" class="nav-link">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+
+  <!-- Animated particle canvas -->
+  <canvas id="hero-canvas"></canvas>
+
+  <div class="hero-overlay"></div>
+  <div class="hero-pattern"></div>
+
+  <div class="hero-content">
+    <div class="hero-chip">📍 Near Women's College · Ama Bagan · Odisha</div>
+    <h1 class="hero-title">The<br/><em>Express</em><br/>Soda</h1>
+    <p class="hero-sub">Open Air Cafe. Gym fuel, street momos, loaded burgers &amp; shakes — served with soul.</p>
+    <div class="hero-btns">
+      <a href="menu.html"    class="btn btn-red">🍜 Explore Menu</a>
+      <a href="contact.html" class="btn btn-ghost">📍 Find Us</a>
+    </div>
+  </div>
+  <a href="#stats" class="scroll-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg></a>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip" id="stats">
+  <div class="stat"><span class="stat-n">30+</span><span class="stat-l">Menu Items</span></div>
+  <div class="stat-div"></div>
+  <div class="stat"><span class="stat-n">₹15</span><span class="stat-l">Starts From</span></div>
+  <div class="stat-div"></div>
+  <div class="stat"><span class="stat-n">3</span><span class="stat-l">Categories</span></div>
+  <div class="stat-div"></div>
+  <div class="stat"><span class="stat-n">📦</span><span class="stat-l">Online Orders</span></div>
+</div>
+
+<!-- ABOUT -->
+<section class="about-strip">
+  <div class="about-inner">
+    <div class="about-img-wrap reveal-el reveal">
+      <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80" alt="Fresh food"/>
+    </div>
+    <div class="about-text">
+      <span class="about-accent">"</span>
+      <h2>Your favourite<br/><span>open-air corner</span></h2>
+      <p>Tucked near Women's College in Ama Bagan, The Express Soda is the go-to spot for gym-goers, students and food lovers. We believe great food doesn't have to be expensive — just made with care.</p>
+      <p>From protein-loaded breakfast bowls to crispy momos and juicy burgers, every dish is prepared fresh and served fast.</p>
+      <a href="menu.html" class="btn btn-outline">See Full Menu →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED MENU PREVIEW -->
+<section class="featured-sec">
+  <div class="section-header">
+    <span class="section-tag">Crowd Favourites</span>
+    <h2 class="section-title">Must-Try Dishes</h2>
+    <p class="section-sub">A taste of what awaits you — visit <a href="menu.html" style="color:var(--red);font-weight:700">our full menu</a> for everything.</p>
+  </div>
+  <div class="food-grid">
+
+    <div class="food-card reveal" data-cat="gym">
+      <div class="food-card-img">
+        <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=600&q=80" alt="Protein Shake" loading="lazy"/>
+        <span class="food-img-tag tag-gym">Gym</span>
+      </div>
+      <div class="food-card-body">
+        <h3>Whey Protein Shake</h3>
+        <p>Pure whey protein post-workout shake to fuel your recovery.</p>
+        <div class="food-card-footer"><span class="food-price">₹100</span></div>
+      </div>
+    </div>
+
+    <div class="food-card reveal" data-cat="momo">
+      <div class="food-card-img">
+        <img src="https://images.unsplash.com/photo-1625398407796-82650a8c135f?w=600&q=80" alt="Steam Momo" loading="lazy"/>
+        <span class="food-img-tag tag-momo">Momo</span>
+      </div>
+      <div class="food-card-body">
+        <h3>Steam Momo</h3>
+        <p>Classic steamed veg momos served piping hot with spicy chutney.</p>
+        <div class="food-card-footer">
+          <div class="food-price-split"><span>½ ₹40</span><span>Full ₹80</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="food-card reveal" data-cat="burger">
+      <div class="food-card-img">
+        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80" alt="Veg Burger" loading="lazy"/>
+        <span class="food-img-tag tag-burger">Burger</span>
+      </div>
+      <div class="food-card-body">
+        <h3>Alu Tikki Burger</h3>
+        <p>Spiced potato tikki in a soft toasted bun with fresh veggies.</p>
+        <div class="food-card-footer"><span class="food-price">₹50</span></div>
+      </div>
+    </div>
+
+    <div class="food-card reveal" data-cat="special">
+      <div class="food-card-img">
+        <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?w=600&q=80" alt="Special Maggi" loading="lazy"/>
+        <span class="food-img-tag tag-special">⭐ Special</span>
+      </div>
+      <div class="food-card-body">
+        <h3>Special Maggie</h3>
+        <p>Our signature — Maggi overloaded with paneer, melted cheese &amp; secret spices.</p>
+        <div class="food-card-footer"><span class="food-price">₹169</span></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="view-all-wrap">
+    <a href="menu.html" class="btn btn-red">View Full Menu →</a>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <div class="cta-bg"></div>
+  <div class="cta-overlay"></div>
+  <div class="cta-content">
+    <h2>Order Now &amp; Pick Up Fresh</h2>
+    <p>Call or WhatsApp us to place your order ahead. We'll have it ready for you hot and fresh!</p>
+    <a href="tel:7978295088" class="btn btn-gold">📞 7978295088</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-wrap">
+        <img src="images/logo.jpeg" alt="Logo" class="logo-img"/>
+        <div><p class="footer-name">The Express Soda</p><p class="footer-tagline">Open Air Cafe</p></div>
+      </div>
+      <p class="footer-desc">Fresh food served fast at Ama Bagan. Gym fuel, momos, burgers &amp; more.</p>
+      <a href="tel:7978295088" class="footer-phone">📞 7978295088</a>
+    </div>
+    <div class="footer-col">
+      <h5>Quick Links</h5>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Hours</h5>
+      <ul>
+        <li><a>Mon–Sat: 8 AM – 9 PM</a></li>
+        <li><a>Sunday: 9 AM – 7 PM</a></li>
+        <li><a>📦 Online Orders Available</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 The Express Soda · Ama Bagan, Odisha</span>
+    <span class="footer-badge">Made with ❤️ in Odisha</span>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+
+<!-- ══════════════════════════════════════════
+     ANIMATED HERO BACKGROUND — Particle + Embers
+     ══════════════════════════════════════════ -->
+<script>
+(function () {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx    = canvas.getContext('2d');
+
+  // ── Resize canvas to fill hero ──
+  function resize() {
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', () => { resize(); initParticles(); });
+
+  // ── Colour palette ──
+  const REDS   = ['rgba(214,43,43,', 'rgba(180,20,20,', 'rgba(255,80,60,'];
+  const GOLDS  = ['rgba(245,200,66,', 'rgba(220,160,30,'];
+  const WHITES = ['rgba(255,255,255,'];
+
+  // ── Particle class ──
+  class Particle {
+    constructor() { this.reset(true); }
+    reset(initial = false) {
+      this.x    = Math.random() * canvas.width;
+      this.y    = initial ? Math.random() * canvas.height : canvas.height + 10;
+      this.r    = Math.random() * 2.2 + .4;
+      this.vy   = -(Math.random() * .55 + .2);
+      this.vx   = (Math.random() - .5) * .3;
+      this.life = 0;
+      this.maxLife = Math.random() * 260 + 120;
+      const pool = Math.random() < .55 ? REDS : Math.random() < .5 ? GOLDS : WHITES;
+      this.col  = pool[Math.floor(Math.random() * pool.length)];
+      // ember drift
+      this.drift     = (Math.random() - .5) * .015;
+      this.driftPhase = Math.random() * Math.PI * 2;
+    }
+    update() {
+      this.life++;
+      this.driftPhase += this.drift;
+      this.x += this.vx + Math.sin(this.driftPhase) * .4;
+      this.y += this.vy;
+      if (this.life > this.maxLife || this.y < -10) this.reset();
+    }
+    draw() {
+      const progress = this.life / this.maxLife;
+      // fade in for first 20%, hold, fade out last 30%
+      let alpha;
+      if      (progress < .15) alpha = progress / .15;
+      else if (progress > .7)  alpha = 1 - (progress - .7) / .3;
+      else                     alpha = 1;
+      alpha *= .75;
+
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = this.col + alpha + ')';
+      ctx.fill();
+    }
+  }
+
+  // ── Streak class (fast diagonal streaks like sparks) ──
+  class Streak {
+    constructor() { this.reset(true); }
+    reset(initial = false) {
+      this.x    = Math.random() * canvas.width;
+      this.y    = initial ? Math.random() * canvas.height : canvas.height + 20;
+      this.len  = Math.random() * 40 + 15;
+      this.vy   = -(Math.random() * 1.8 + 1.0);
+      this.vx   = (Math.random() - .5) * .6;
+      this.life = 0;
+      this.maxLife = Math.random() * 100 + 60;
+      const r = Math.random();
+      this.col = r < .6 ? `rgba(214,43,43,` : r < .8 ? `rgba(245,200,66,` : `rgba(255,120,80,`;
+    }
+    update() {
+      this.life++;
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.life > this.maxLife || this.y < -60) this.reset();
+    }
+    draw() {
+      const progress = this.life / this.maxLife;
+      let alpha = progress < .2 ? progress / .2 : progress > .7 ? 1 - (progress - .7) / .3 : 1;
+      alpha *= .45;
+
+      const angle = Math.atan2(this.vy, this.vx);
+      const ex = this.x + Math.cos(angle) * this.len;
+      const ey = this.y + Math.sin(angle) * this.len;
+
+      const grad = ctx.createLinearGradient(this.x, this.y, ex, ey);
+      grad.addColorStop(0, this.col + alpha + ')');
+      grad.addColorStop(1, this.col + '0)');
+
+      ctx.beginPath();
+      ctx.moveTo(this.x, this.y);
+      ctx.lineTo(ex, ey);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth   = Math.random() * 1.2 + .4;
+      ctx.stroke();
+    }
+  }
+
+  // ── Glowing orb class (slow large blobs) ──
+  class Orb {
+    constructor() { this.reset(true); }
+    reset(initial = false) {
+      this.x   = Math.random() * canvas.width;
+      this.y   = initial ? Math.random() * canvas.height : canvas.height + 60;
+      this.r   = Math.random() * 55 + 25;
+      this.vy  = -(Math.random() * .18 + .06);
+      this.vx  = (Math.random() - .5) * .1;
+      this.life = 0;
+      this.maxLife = Math.random() * 500 + 300;
+      this.hue = Math.random() < .6 ? '214,43,43' : '245,200,66';
+    }
+    update() {
+      this.life++;
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.life > this.maxLife || this.y < -80) this.reset();
+    }
+    draw() {
+      const progress = this.life / this.maxLife;
+      let alpha = progress < .2 ? progress / .2 : progress > .7 ? 1 - (progress - .7) / .3 : 1;
+      alpha *= .07;
+
+      const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
+      grad.addColorStop(0, `rgba(${this.hue},${alpha})`);
+      grad.addColorStop(1, `rgba(${this.hue},0)`);
+
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+  }
+
+  // ── Background gradient (dark cinematic) ──
+  function drawBg() {
+    const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    grad.addColorStop(0,   '#0a0a0a');
+    grad.addColorStop(.4,  '#110608');
+    grad.addColorStop(.75, '#0d0305');
+    grad.addColorStop(1,   '#080808');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // subtle red glow bottom-right
+    const glow = ctx.createRadialGradient(
+      canvas.width * .75, canvas.height * .6, 0,
+      canvas.width * .75, canvas.height * .6, canvas.width * .55
+    );
+    glow.addColorStop(0,   'rgba(160,20,20,.18)');
+    glow.addColorStop(.5,  'rgba(100,10,10,.08)');
+    glow.addColorStop(1,   'rgba(0,0,0,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // ── Init pools ──
+  let particles, streaks, orbs;
+  function initParticles() {
+    const count = Math.min(Math.floor(canvas.width * .18), 220);
+    particles = Array.from({ length: count },  () => new Particle());
+    streaks   = Array.from({ length: 18 },     () => new Streak());
+    orbs      = Array.from({ length: 8 },      () => new Orb());
+  }
+  initParticles();
+
+  // ── Animation loop ──
+  function tick() {
+    drawBg();
+    orbs.forEach      (o => { o.update(); o.draw(); });
+    streaks.forEach   (s => { s.update(); s.draw(); });
+    particles.forEach (p => { p.update(); p.draw(); });
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+</script>
+
+</body>
+</html>

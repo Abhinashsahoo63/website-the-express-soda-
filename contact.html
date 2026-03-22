@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact – The Express Soda</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .contact-main { padding: 5rem 2rem 6rem; background: var(--cream); }
+    .contact-inner { max-width: 1100px; margin: 0 auto; }
+
+    /* Grid */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 3.5rem; align-items: start; }
+
+    /* Info cards */
+    .info-cards { display: flex; flex-direction: column; gap: 1.1rem; }
+    .info-card {
+      display: flex; align-items: flex-start; gap: 1.1rem;
+      background: var(--white); border: 2px solid var(--cream2);
+      border-radius: var(--r); padding: 1.3rem 1.5rem;
+      transition: transform var(--tr), border-color var(--tr), box-shadow var(--tr);
+    }
+    .info-card:hover { transform: translateX(6px); border-color: rgba(214,43,43,.25); box-shadow: var(--sh); }
+    .ic-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+    .ic-body h4 { font-family: var(--ff-h); font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--red); margin-bottom: .35rem; }
+    .ic-body p  { font-size: .93rem; color: var(--muted); line-height: 1.65; }
+    .ic-body a  { color: var(--dark); font-weight: 700; font-size: 1rem; transition: color var(--tr); }
+    .ic-body a:hover { color: var(--red); }
+
+    /* Hours table */
+    .hours-table { width: 100%; border-collapse: collapse; margin-top: .3rem; }
+    .hours-table td { font-size: .88rem; color: var(--muted); padding: .25rem 0; }
+    .hours-table td:last-child { text-align: right; font-weight: 700; color: var(--dark); }
+
+    /* Map */
+    .map-card { background: var(--white); border: 2px solid var(--cream2); border-radius: var(--rl); overflow: hidden; box-shadow: var(--sh); }
+    .map-card iframe { display: block; width: 100%; height: 420px; border: none; }
+    .map-label { padding: 1.2rem 1.5rem; display: flex; align-items: center; gap: .6rem; border-top: 1px solid var(--cream2); }
+    .map-label span { font-family: var(--ff-h); font-size: .82rem; font-weight: 700; color: var(--mid); }
+    .map-label a { font-family: var(--ff-h); font-size: .78rem; font-weight: 700; color: var(--red); margin-left: auto; }
+
+    /* CTA strip */
+    .contact-cta {
+      text-align: center; margin-top: 5rem; padding: 3.5rem 2rem;
+      background: var(--dark); border-radius: var(--rl); position: relative; overflow: hidden;
+    }
+    .contact-cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(214,43,43,.2) 0%, transparent 70%); }
+    .contact-cta h3 { font-family: var(--ff-d); font-size: clamp(1.6rem,4vw,2.4rem); color: var(--white); margin-bottom: .7rem; position: relative; z-index: 1; }
+    .contact-cta p  { color: rgba(255,255,255,.6); font-size: .95rem; margin-bottom: 1.8rem; position: relative; z-index: 1; }
+    .cta-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+
+    @media(max-width:768px){ .contact-grid{ grid-template-columns:1fr; } .map-card iframe{ height:300px; } }
+  </style>
+</head>
+<body>
+
+<nav class="navbar solid" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.jpeg" alt="Logo" class="logo-img"/>
+      <span class="logo-text">The Express Soda</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html"   class="nav-link">Home</a></li>
+      <li><a href="menu.html"    class="nav-link">Menu</a></li>
+      <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+      <li><a href="contact.html" class="nav-link active">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1600&q=80')"></div>
+  <div class="page-hero-overlay"></div>
+  <div class="page-hero-content">
+    <span class="page-hero-tag">We'd love to see you</span>
+    <h1 class="page-hero-title">Find Us</h1>
+  </div>
+</div>
+
+<section class="contact-main">
+  <div class="contact-inner">
+    <div class="section-header">
+      <span class="section-tag">Come visit</span>
+      <h2 class="section-title">Get In Touch</h2>
+      <p class="section-sub">We're open six days a week. Drop by or place your order by phone!</p>
+    </div>
+
+    <div class="contact-grid">
+      <!-- Info column -->
+      <div class="info-cards">
+
+        <div class="info-card">
+          <div class="ic-icon">📍</div>
+          <div class="ic-body">
+            <h4>Address</h4>
+            <p>Near Women's College<br/>Ama Bagan, Odisha, India</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="ic-icon">📞</div>
+          <div class="ic-body">
+            <h4>Phone &amp; WhatsApp</h4>
+            <a href="https://wa.me/917978295088" target="_blank" rel="noopener">7978295088</a>
+            <p style="margin-top:.3rem;font-size:.82rem;">Call or WhatsApp to order ahead</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="ic-icon">🕐</div>
+          <div class="ic-body">
+            <h4>Opening Hours</h4>
+            <table class="hours-table">
+              <tr><td>Monday – Saturday</td><td>8:00 AM – 9:00 PM</td></tr>
+              <tr><td>Sunday</td><td>9:00 AM – 7:00 PM</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="ic-icon">📦</div>
+          <div class="ic-body">
+            <h4>Online Orders</h4>
+            <p>Available! Call or WhatsApp your order and we'll have it fresh and ready for you.</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="ic-icon">🍽️</div>
+          <div class="ic-body">
+            <h4>Type</h4>
+            <p>Open Air Cafe · Veg &amp; Egg · Dine-in &amp; Takeaway</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Map column -->
+      <div class="map-card">
+        <iframe
+          title="The Express Soda Location"
+          src="https://maps.google.com/maps?q=Near+Womens+College+Ama+Bagan+Odisha&t=&z=15&ie=UTF8&iwloc=&output=embed"
+          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        <div class="map-label">
+          <span>📍 Ama Bagan, Near Women's College, Odisha</span>
+          <a href="https://maps.google.com/?q=Near+Womens+College+Ama+Bagan+Odisha" target="_blank" rel="noopener">Open in Maps ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="contact-cta">
+      <h3>Ready to Order?</h3>
+      <p>Call us or just walk in — we'll have something delicious ready for you.</p>
+      <div class="cta-btns">
+        <a href="https://wa.me/917978295088" target="_blank" rel="noopener" class="btn btn-red">💬 Contact us</a>
+        <a href="https://www.zomato.com/joda/the-express-soda-joda-city-centre-/order" target="_blank" rel="noopener" class="btn btn-gold">🛵 Order Now</a>
+        <a href="menu.html"       class="btn btn-gold">🍜 See Menu</a>
+        <a href="gallery.html"    class="btn btn-ghost">📸 Gallery</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-wrap">
+        <img src="images/logo.jpeg" alt="Logo" class="logo-img"/>
+        <div><p class="footer-name">The Express Soda</p><p class="footer-tagline">Open Air Cafe</p></div>
+      </div>
+      <p class="footer-desc">Fresh food served fast at Ama Bagan. Gym fuel, momos, burgers &amp; more.</p>
+      <a href="tel:7978295088" class="footer-phone">📞 7978295088</a>
+    </div>
+    <div class="footer-col">
+      <h5>Pages</h5>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Hours</h5>
+      <ul>
+        <li><a>Mon–Sat: 8 AM – 9 PM</a></li>
+        <li><a>Sunday: 9 AM – 7 PM</a></li>
+        <li><a>📦 Online Orders Available</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 The Express Soda · Ama Bagan, Odisha</span>
+    <span class="footer-badge">Made with ❤️ in Odisha</span>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
